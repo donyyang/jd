@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="../ued/css/common.css">
+    <link rel="stylesheet" href="../ued/css/main.css">
+    <style type="text/css">
+        .hide,.localTableHeadHide {
+            display:none;
+        }
+
+        .jsonTwo,.localdataWrapper,.dcsDataWrapper,.addDdataWrapper{
+            display:none;
+        }
+
+        .colHide {
+            display:none;
+        }
+
+        .localAllDatas {
+            height:450px;
+            overflow:auto;
+            /*border-bottom:1px solid #d3dbe3;*/
+        }
+        .previewHead {
+            padding:15px 8px;
+            background:#ebf1f5;
+        }
+
+        .localframe {
+            position:relative;
+        }
+
+        #localFileIpt {
+            position:absolute;
+            top:0;
+            width:100%;
+            height:100%;
+            opacity:0;
+        }
+
+        /*suoyou */
+        .dataBaseName {
+            display:inline-block;
+            width:90%;
+        }
+
+        .turnLeft {
+            transform:rotate(-90deg);
+            transition:.1s;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="mask">
+        <div class="spinner-box">
+            <div class="spinner">
+                <div class="spinner-container container1">
+                    <div class="circle1"></div>
+                    <div class="circle2"></div>
+                    <div class="circle3"></div>
+                    <div class="circle4"></div>
+                </div>
+                <div class="spinner-container container2">
+                    <div class="circle1"></div>
+                    <div class="circle2"></div>
+                    <div class="circle3"></div>
+                    <div class="circle4"></div>
+                </div>
+                <div class="spinner-container container3">
+                    <div class="circle1"></div>
+                    <div class="circle2"></div>
+                    <div class="circle3"></div>
+                    <div class="circle4"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade in"></div>
+    </div>
+
+    <div class="getJsonWrapper pd15">
+        <div class="jsonOne">
+            <h3 class="content-h3"><i class="iconfont2 text-green">&#xe60c;</i> 数据源 <p class="content-h3-p">数据来源，支持DCS数据源，在DCS中创建数据库/表并加载数据后，在数千工坊中连接后即可使用</p></h3>
+            <div class="nav-left text-left localAllDatas">
+                <div class="mgt-15" style = "padding:0 15px 0 15px">
+                    <div id = "getJsonBtn" class="large-btn">获取数据</div>
+                </div>
+                <ul class="menu data-menu localDatas" style = "margin:0">
+                    
+                </ul>
+                 <ul class="menu data-menu allData">
+                    
+                </ul>
+            </div>
+            
+            <section class="jsonRight">
+                <h4 class="content-h4">
+                    <div class="edit-box2">
+                        <a title="向右打开" href="javascript:;" id="open-r">
+                            <i class="gficon29"></i>
+                        </a>
+                        <span class = "jsonName"></span>
+                        <div class="pull-right">
+                            <a id = "createModel" tableName = "" dbBaseName = ""  href="javascript:void(0)"><i class="gficon56"></i>创建关联模型</a>
+
+                            <a id = "addDatas" tableName = "" dbBaseName = "" href="javascript:void(0)"><i class="gficon57"></i>追加数据</a>
+                            <a id = "createTable" tableName = "" dbBaseName href="javascript:void(0)"><i class="gficon58"></i>创建工作表</a>
+                        </div>
+                    </div>
+                </h4>
+                <!-- 上传的数据 -->
+                <div class="jsonCont table-responsive">
+                    <table class="table table-bordered">
+                        <thead class = "dataTh">
+                            
+                        </thead>
+                        <tbody class = "dataTbody">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        
+        <!--三个选择的 -->
+        <div class="jsonTwo">
+            <h3 class="content-h3">
+                <div class="pull-left"><i class="iconfont2 text-green">&#xe60c;</i> 集群详情信息<p class="content-h3-p">通过拖拽、所见即所得的数据操作方式，对海量数据进行极速可视化分析</p></div>
+                <a href="./datasource_new.html" class="btn btn-default btn-sm"><i class = "gficon32"> </i>返回</a>
+                <a href="#" data-toggle="modal" data-target="#myModal_process" class="pull-right">查看流程演示 <i class="iconfont2 fs-18 text-blue">&#xe638;</i></a>
+            </h3>
+            <!-- 添加到本地数据中 -->
+            <!-- <div class="jsonTwoHead">
+                <a href="javascript:void(0)">返回</a>
+                <span>获取数据</span>
+                <a id = "localImportBtn" href="javascript:void(0)">导入</a>
+            </div> -->
+            <div class="framesNavs">
+                <ul class="index-lst data-lst">
+                    <li class="localframe">
+                        <a href="javascript:void(0)">
+                            <input id="localFileIpt" type="file" multiple=true name = 'uploadFile'>
+                            <i class="data-icon"></i> <h3>从本地导入</h3> 
+                            <p>支持csv、xlsx等格式文件上传，大小不超<br>
+                            过10M</p>
+                            <textarea style = "display:none;"></textarea>
+                        </a>
+                    </li>
+                   
+                    <li id="dcsframe">
+                        <a href="javascript:void(0)">
+                            <i class="data-icon2"></i>
+                            <h3>从DCS选择导入</h3> 
+                            <p>将“数据计算平台”的数据导入到“数千工坊”<br>进行多维可视化分析</p>
+                        </a>
+                    </li>
+                    <li id="businessframe">
+                        <a href="javascript:void(0)">
+                            <i class="data-icon3"></i> 
+                            <h3>京东POP商家数据导入</h3> 
+                            <p>通过授权，将POP商家数据导入到“数千工<br>坊”进行分析</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 本地数据 -->
+        <div class="localdataWrapper">
+            <h3 class="content-h3">
+                <i class="iconfont2 text-green">&#xe60c;</i> 从本地导入 
+                <a href="./datasource_new.html" class="btn btn-default btn-sm"><i class = "gficon32"> </i>返回</a>
+            </h3>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">表名：</label>
+                            <div class="col-sm-6">
+                                <input class = "localdata-name form-control" type = "text" placeholder = "请输入表名">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-1 control-label">域名分隔符：</label>
+                            <div class="col-sm-10">
+                                <label class="radio-inline pull-left">
+                                    <input class = "colSymbol" checked index = '0' type = "radio" name = "col" value = ','><span>逗号</span>
+                                </label>
+                                <label class="radio-inline pull-left">
+                                    <input class = "colSymbol" index = '1' type = "radio" name = "col" value = ';'><span>分号</span>
+                                </label>
+                                <label class="radio-inline pull-left">
+                                    <input class = "colSymbol" index = '2' type = "radio" name = "col" value = " "><span>空格</span>
+                                </label>
+                                <label class="radio-inline pull-left">
+                                    <input class = "colSymbol" index = '3' type = "radio" name = "col" value = '\t'><span>制表符</span>
+                                </label>
+                                <label class="radio-inline pull-left">
+                                    <input class = "colSymbol iptColSymbol" index = '4' type = "radio" name = 'col' ><span>其他</span>
+                                </label>
+                                 <div class="col-xs-2">
+                                    <input id = "colSymbolOther" class = "form-control" type = "text" placeholder = "其他">
+                                </div>
+                                    
+                                <p class="form-control-static pull-left mgr-15">首行是列名</p>
+                                 <label class="radio-inline">
+                                    <input class = "colName isColName" type="radio" name="isLine"  value="option3"> 是
+                                </label>
+                                <label class="radio-inline">
+                                    <input class = "colName notColName" type="radio" checked name="isLine"  value="option3"> 否
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-1 control-label">行分隔符：</label>
+                            <div class="col-lg-2">
+                                <label class="radio-inline pull-left">
+                                     <input class = "rowSymbol" index = '0' checked type = "radio" value = '\n' name = "row"><span>\n</span>
+                                </label>
+                                <label class="radio-inline pull-left">
+                                     <input class = "rowSymbol" index = '1' type = "radio" value = '\r' name = "row"><span>\r</span>
+                                </label>
+                                <label class="radio-inline pull-left">
+                                    <input class = "rowSymbol" index = '2' type = "radio" value = '\r\n' name = "row"><span>\r\n</span>
+                                </label>
+                            </div>
+                            <label  class="col-sm-1 control-label">文件编码  :</label>
+                            <div class="col-sm-3">
+                                <select id = "codeStyle" class="form-control">
+                                    <option value = "UTF-8" selected>UTF-8</option>
+                                    <option value = "GBK">GBK</option>
+                                    <option value = "ANSI">ANSI</option>
+                                    <option value = "ISO-8859-1">ISO-8859-1</option>
+                                    <option value = "GB2312">GB2312</option>
+                                    <option value = "UTF-16">UTF-16</option>
+                                </select>
+                            </div>
+                        <div>
+                        <!-- <label  class="col-sm-1 control-label">文件编码  :</label>
+                        <div class="col-sm-3">
+                            <select id = "codeStyle" class="form-control">
+                                <option value = "UTF-8" selected>UTF-8</option>
+                                <option value = "GBK">GBK</option>
+                                <option value = "ANSI">ANSI</option>
+                                <option value = "ISO-8859-1">ISO-8859-1</option>
+                                <option value = "GB2312">GB2312</option>
+                                <option value = "UTF-16">UTF-16</option>
+                            </select> 
+                        </div>-->
+                    </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default table-responsive">
+                <div class="previewHead">
+                    <span>数据预览10行</span>
+                    <a id = "addCol" href="javascript:void(0)" class="text-blue pull-right">增加列</a>
+                </div>
+                <div>
+                    <table class="tabledata table table-striped">
+                        <thead>
+                            <tr class = "localTableHead"></tr>
+                            <tr class = "localTableHeadHide"></tr>
+                        </thead>
+                        <tbody class = "localTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row btn-box">
+                <input  id = "localImportBtn" type="button" class="btn btn-success" value="导  入">
+            </div>
+        </div>
+        
+        <!-- 添加列 -->
+        <div class="modal fade" id="addColModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">添加列</h4>
+                    </div>
+                    <div class="modal-body text-center pd60">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>类型</th>
+                                    <th>值</th>
+                                    <th>分区</th>
+                                </tr>
+                            </thead>
+                            <tbody class = "colBody">
+                                <tr>
+                                    <td>
+                                        <input class = "form-control newColName" type = "text" placeholder = "请输入列名">
+                                    </td>
+                                    <td>
+                                        <select class = "form-control localType">
+                                            <option selected>string</option>
+                                            <option>decimal</option>
+                                            <option>bigint</option>
+                                            <option>timestamp</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class = "form-control partionIpt" type = "text" placeholder = "请输入对应的值" disabled>
+                                    </td>
+                                    <td>
+                                        <input class = "partiteBtn" type = "checkbox">
+                                    </td>
+                                    <td>
+                                        <a class = "localColDel" href="#">删除</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <span class = "newAddColBtn">新增一列</span>
+                    </div>
+                    <div class="sm modal-footer">
+                        <button type="button" id = "addColBtn" class="btn btn-default tipsBtn" data-dismiss="modal" data-dismiss="modal">确 定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DCS数据 -->
+        <!-- <section class="dcsDataWrapper">
+            <h3 class="content-h3"><i class="iconfont2 text-green">&#xe60c;</i> 从DCS获取数据 <a href="" class="btn btn-default btn-sm"><i class="gficon32"></i>返回</a></h3>
+            <ul class="dcsDBs nav nav-left">
+                
+            </ul>
+            <div class="tab-content">
+                 <div>
+                    <div class="panel panel-default table-responsive">
+                        <table class="table table-bordered table-striped ">
+                            <thead>
+                            <tr class="active">
+                                <th><div class="checkbox">
+                                    <label>
+                                        <input class = "dbTableCheckAll" type="checkbox" value=""> 表名
+                                    </label>
+                                </div></th>
+                                <th>状态</th>
+                                <th>更新时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody class = "dbsTables">
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row btn-box"><input type="button" class="btn btn-success"  id="dataImport" value="导  入"></div>
+                </div>
+            </div>
+        </section> -->
+
+        <!-- 结构预览和数据预览 -->
+        <!-- <div class="modal fade" id="reviewData">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title dataTitle"></h4>
+                    </div>
+                    <div class="modal-body text-center pd60">
+                        <table>
+                            <thead>
+                               
+                            </thead>
+                            <tbody class = "dataBody">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="sm modal-footer">
+                        <button type="button" id = "dataConfir" class="btn btn-default tipsBtn" data-dismiss="modal" data-dismiss="modal">确 定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+      
+        <!-- 追加数据 -->
+        <!-- <div class="addDdataWrapper">
+            <table class="partiteWrapper">
+                <tr>
+                    <th>指定分区名：</th>
+                    <th>请选择或输入各级分区目录：</th>
+                </tr>
+                <tr>
+                    <td>第一级分区   订单时间=</td>
+                    <td>
+                        <select name="" id="">
+                            <option></option>
+                            <option></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>第二级分区   三级类目=</td>
+                    <td>
+                        <select name="" id="">
+                            <option></option>
+                            <option></option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <div class="addFile">
+                <input id = "addLocalFileIpt" type = "file">
+                <textarea name = "" style = "display:none;"></textarea>
+                <a href="javasrcipt:volid(0)">
+                    <label>
+                        <input id = "coverDataBtn" type = "checkbox">
+                        <span>覆盖原有数据</span>
+                    </label>
+                </a>
+            </div>
+            
+            <div>
+                <label>域名分隔符：</label>
+                <input class = "addColSymbol" checked index = '0' type = "radio" name = "addCol" value = ','><span>逗号</span>
+                <input class = "addColSymbol" index = '1' type = "radio" name = "addCol" value = ';'><span>分号</span>
+                <input class = "addColSymbol" index = '2' type = "radio" name = "addCol" value = " "><span>空格</span>
+                <input class = "addColSymbol" index = '3' type = "radio" name = "addCol" value = '\t'><span>制表符</span>
+                <input class = "addColSymbol addIptColSymbol" index = '4' type = "radio" name = 'addCol' ><span>其他</span>
+                <input id = "addColSymbolOther" type = "text" placeholder = "其他">
+            </div>
+            <div>
+                <span>文件首行为列名</span>
+                <input id = "addFirstcolBtn" type = "checkbox">
+            </div>
+            <div>
+                <label>行分隔符：</label>
+                <input class = "addRowSymbol" index = '0' checked type = "radio" value = '\n' name = "addRow"><span>\n</span>
+                <input class = "addRowSymbol" index = '1' type = "radio" value = '\r' name = "addRow"><span>\r</span>
+                <input class = "addRowSymbol" index = '2' type = "radio" value = '\n\r' name = "addRow"><span>\n\r</span>
+            </div>
+            <div>
+                <span>文件编码</span>
+                <select id = "addCodeStyle">
+                    <option value = "UTF-8" selected>UTF-8</option>
+                    <option value = "GBK">GBK</option>
+                    <option value = "ANSI">ANSI</option>
+                    <option value = "ISO-8859-1">ISO-8859-1</option>
+                    <option value = "GB2312">GB2312</option>
+                    <option value = "UTF-16">UTF-16</option>
+                </select>
+            </div>
+
+            <div>
+                <h3>数据预览10行</h3>
+                <a id = "modifyAddCol" href="#">增加列</a>
+                <div>
+                    <table class="addTabledata">
+                        <thead>
+                            <tr class = "addLocalTableHead"></tr>
+                            <tr class = "addLocalTableHeadHide"></tr>
+                        </thead>
+                        <tbody class = "addLocalTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div> -->
+        
+        <!-- <div class="modal fade" id="fAddColModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">添加列</h4>
+                    </div>
+                    <div class="modal-body text-center pd60">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>类型</th>
+                                    <th>值</th>
+                                    <th>分区</th>
+                                </tr>
+                            </thead>
+                            <tbody class = "addColBody">
+                                <tr>
+                                    <td>
+                                        <input class = "addNewColName" type = "text" placeholder = "请输入列名">
+                                    </td>
+                                    <td>
+                                        <select>
+                                            <option>varchar(256)</option>
+                                            <option>string</option>
+                                            <option>number</option>
+                                            <option>decimal</option>
+                                            <option>bigint</option>
+                                            <option>timestamp</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class = "addPartionIpt" type = "text" placeholder = "请输入对应的值" disabled>
+                                    </td>
+                                    <td>
+                                        <input class = "addPartiteBtn" type = "checkbox">
+                                    </td>
+                                    <td>
+                                        <a class = "addLocalColDel" href="#">删除</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <span class = "addNewAddColBtn">新增一列</span>
+                    </div>
+                    <div class="sm modal-footer">
+                        <button type="button" id = "fAddColBtn" class="btn btn-default tipsBtn" data-dismiss="modal" data-dismiss="modal">确 定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+    </div>
+
+    <!--提示框 -->
+    <div class="modal fade" id="prompTips">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">提示框</h4>
+                </div>
+                <div class="tipCont modal-body text-center pd60">
+                    
+                </div>
+                <div class="sm modal-footer" style = "text-align:center">
+                    <button type="button" class="btn btn-default tipsBtn" data-dismiss="modal">确 定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 数千工坊流程modal -->
+    <div class="modal fade" id="myModal_process">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">数千工坊流程演示</h4>
+                </div>
+                <div class="modal-body">
+                    <img src="../ued/images/tmp.jpg">
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script type="text/javascript" src="../../lib/jquery.js"></script>
+    <script src="view/jquery.ui.widget.js"></script>
+    <script src="view/jquery.iframe-transport.js"></script>
+    <script src="view/jquery.fileupload.js"></script>
+    <script src = "../view/grid/bootstrap-paginator.js"></script>
+
+    <script src="../ued/js/common.js"></script>
+    <script src="../ued/js/main.js"></script>
+    
+    <script type="text/javascript" src="../store/AbstractStore.js"></script>
+    <script type="text/javascript" src="../store/DatasourceNewStore.js"></script>
+    <script type="text/javascript" src = "view/getJsonJump.js"></script>
+
+    <!-- 试试整合添加的 -->
+    <script type="text/javascript" src = "view/addAndLocal.js"></script>
+    <!-- // <script type="text/javascript" src = "view/addLocalData.js"></script> -->
+    <script type="text/javascript" src = "view/loadFile.js"></script>
+    <!-- dcs -->
+    <!-- // <script type="text/javascript" src = "view/DCSData.js"></script> -->
+    <!-- alldatas -->
+    <script type="text/javascript" src = "view/allDatas.js"></script>
+    
+    <script type="text/javascript" src = "GetJsonController.js"></script>
+
+</body>
+</html>

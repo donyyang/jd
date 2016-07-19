@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+    <link rel="stylesheet" href="../ued/css/common.css">
+    <link rel="stylesheet" href="../ued/css/main.css">
+    <style type="text/css">
+        /*dcs*/
+        .addShow {
+            background:#eee;
+        }
+
+        .previewHead {
+            background:#f5f5f5;
+            padding:15px 8px;
+        }
+
+        .pageCont {
+            text-align:right;
+        }
+        #reviewData .modal-body {
+            overflow:auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="mask">
+        <div class="spinner-box">
+            <div class="spinner">
+                <div class="spinner-container container1">
+                    <div class="circle1"></div>
+                    <div class="circle2"></div>
+                    <div class="circle3"></div>
+                    <div class="circle4"></div>
+                </div>
+                <div class="spinner-container container2">
+                    <div class="circle1"></div>
+                    <div class="circle2"></div>
+                    <div class="circle3"></div>
+                    <div class="circle4"></div>
+                </div>
+                <div class="spinner-container container3">
+                    <div class="circle1"></div>
+                    <div class="circle2"></div>
+                    <div class="circle3"></div>
+                    <div class="circle4"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade in"></div>
+    </div>
+	<section class="dcsDataWrapper pd15">
+        <h3 class="content-h3"><i class="iconfont2 text-green">&#xe60c;</i> 从DCS获取数据 <a href="./datasource_new.html" class="btn btn-default btn-sm"><i class="gficon32"></i>返回</a></h3>
+        <ul class="dcsDBs nav nav-left" style = "height:450px;overflow:auto;">
+            
+        </ul>
+        <div class="tab-content">
+             <div>
+                <div class="panel panel-default table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr class="active">
+                            <th><div class="checkbox">
+                                <label>
+                                    <input class = "dbTableCheckAll" type="checkbox" value=""> 表名
+                                </label>
+                            </div></th>
+                            <th>状态</th>
+                            <!-- <th>更新时间</th> -->
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class = "dbsTables">
+                        
+                        </tbody>
+                    </table>
+                </div>
+                <div class = "pageCont"><ul id="dcsPagate"></ul></div>
+                <div class="row btn-box"><input type="button" class="btn btn-success"  id="dataImport" value="导  入"></div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 结构预览和数据预览 -->
+    <div class="modal fade" id="reviewData">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title dataTitle"></h4>
+                </div>
+                <div class="modal-body text-center pd60">
+                    <table class = "tabledata table table-striped">
+                        <thead class = "DCSdataHead">
+                           
+                        </thead>
+                        <tbody class = "dataBody">
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div class="sm modal-footer">
+                    <button type="button" id = "dataConfir" class="btn btn-default tipsBtn" data-dismiss="modal" data-dismiss="modal">确 定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--提示框 -->
+    <div class="modal fade" id="prompTips">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">提示框</h4>
+                </div>
+                <div class="tipCont modal-body text-center pd60">
+                    
+                </div>
+                <div class="sm modal-footer" style = "text-align:center">
+                    <button type="button" class="btn btn-default tipsBtn" data-dismiss="modal">确 定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<script type="text/javascript" src="../../lib/jquery.js"></script>
+    <script src = "../view/grid/bootstrap-paginator.js"></script>
+
+    <script src="../ued/js/common.js"></script>
+    <script src="../ued/js/main.js"></script>
+    
+    <script type="text/javascript" src="../store/AbstractStore.js"></script>
+    <script type="text/javascript" src="../store/DatasourceNewStore.js"></script>
+
+    <!-- dcs -->
+    <script type="text/javascript" src = "view/DCSData.js"></script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="../ued/css/common.css">
+    <link rel="stylesheet" href="../ued/css/main.css">
+    <style type="text/css">
+        .hide,.localTableHeadHide {
+            display:none;
+        }
+
+        .jsonTwo,.localdataWrapper,.dcsDataWrapper,.addDdataWrapper{
+            /*display:none;*/
+        }
+
+        .colHide {
+            display:none;
+        }
+
+
+        /*可能不需要*/
+         .dime_left {
+            width:20%;
+            float:left;
+            padding-left:15px;
+        }
+        .dime_right {
+            float:left;
+            width:80%;
+        }
+		
+		.localframe {
+			position:relative;
+		}
+
+		#localFileIpt {
+			position:absolute;
+			top:0;
+			width:100%;
+			height:100%;
+			opacity:0;
+		}
+
+        /*dcs*/
+        .addShow {
+            background:#eee;
+        }
+
+        .previewHead {
+            background:#f5f5f5;
+            padding:15px 8px;
+        }
+
+    </style>
+</head>
+<body>
+	<!-- 本地数据 -->
+    <div class="localdataWrapper">
+    	<h3 class="content-h3">
+    		<i class="iconfont2 text-green">&#xe60c;</i> 从本地导入 
+    		<a href="" class="gficon32"></i>返回</a>
+    	</h3>
+    	<div class="panel panel-default">
+    		<div class="panel-body">
+    			<form class="form-horizontal">
+		            <div class="form-group">
+		                <label class="col-sm-1 control-label">表名：</label>
+		                <div class="col-sm-6">
+			                <input class = "localdata-name form-control" type = "text" placeholder = "请输入表明">
+			            </div>
+		            </div>
+		            <div class="form-group">
+		                <label  class="col-sm-1 control-label">域名分隔符：</label>
+		                <div class="col-sm-10">
+		                	<label class="radio-inline pull-left">
+				                <input class = "colSymbol" checked index = '0' type = "radio" name = "col" value = ','><span>逗号</span>
+				            </label>
+				            <label class="radio-inline pull-left">
+			                	<input class = "colSymbol" index = '1' type = "radio" name = "col" value = ';'><span>分号</span>
+			                </label>
+				            <label class="radio-inline pull-left">
+			                	<input class = "colSymbol" index = '2' type = "radio" name = "col" value = " "><span>空格</span>
+			                </label>
+				            <label class="radio-inline pull-left">
+			                	<input class = "colSymbol" index = '3' type = "radio" name = "col" value = '\t'><span>制表符</span>
+			                </label>
+				            <label class="radio-inline pull-left">
+			                	<input class = "colSymbol iptColSymbol" index = '4' type = "radio" name = 'col' ><span>其他</span>
+			                </label>
+                             <div class="col-xs-2">
+                                <input id = "colSymbolOther" class = "form-control" type = "text" placeholder = "其他">
+                            </div>
+			                	
+							<!-- 首行为列名 -->
+                            <p class="form-control-static pull-left mgr-15">首行是列名</p>
+                             <label class="radio-inline">
+                                <input class = "colName isColName" type="radio" name="isLine"  value="option3"> 是
+                            </label>
+                            <label class="radio-inline">
+                                <input class = "colName notColName" type="radio" checked name="isLine"  value="option3"> 否
+                            </label>
+		                </div>
+		            </div>
+		            <!-- <div>
+		                <span>文件首行为列名</span>
+		                <input id = "firstcolBtn" type = "checkbox">
+		            </div> -->
+		            <div class="form-group">
+		                <label  class="col-sm-1 control-label">行分隔符：</label>
+                        <div class="col-sm-2">
+                            <label class="radio-inline pull-left">
+			                     <input class = "rowSymbol" index = '0' checked type = "radio" value = '\n' name = "row"><span>\n</span>
+                            </label>
+                            <label class="radio-inline pull-left">
+			                     <input class = "rowSymbol" index = '1' type = "radio" value = '\r' name = "row"><span>\r</span>
+                            </label>
+                            <label class="radio-inline pull-left">
+		                        <input class = "rowSymbol" index = '2' type = "radio" value = '\n\r' name = "row"><span>\n\r</span>
+                            </label>
+                        </div>
+		            </div>
+		            <div>
+                    <label  class="col-sm-1 control-label">文件编码  :</label>
+                    <div class="col-sm-3">
+                        <select id = "codeStyle" class="form-control">
+                            <option value = "UTF-8" selected>UTF-8</option>
+                            <option value = "GBK">GBK</option>
+                            <option value = "ANSI">ANSI</option>
+                            <option value = "ISO-8859-1">ISO-8859-1</option>
+                            <option value = "GB2312">GB2312</option>
+                            <option value = "UTF-16">UTF-16</option>
+                        </select>
+                    </div>
+	            </form>
+	            </div>
+	        </div>
+        </div>
+
+        <div class="panel panel-default table-responsive">
+            <div class="previewHead">
+                <span>数据预览10行</span>
+                <a id = "addCol" href="#" class="text-blue pull-right">增加列</a>
+            </div>
+            <div>
+                <table class="tabledata table table-striped">
+                    <thead>
+                        <tr class = "localTableHead"></tr>
+                        <tr class = "localTableHeadHide"></tr>
+                    </thead>
+                    <tbody class = "localTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row btn-box">
+            <input  id = "localImportBtn" type="button" class="btn btn-success" value="导  入">
+        </div>
+    </div>
+	
+	<!-- 添加列 -->
+    <div class="modal fade" id="addColModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加列</h4>
+                </div>
+                <div class="modal-body text-center pd60">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>名称</th>
+                                <th>类型</th>
+                                <th>值</th>
+                                <th>分区</th>
+                            </tr>
+                        </thead>
+                        <tbody class = "colBody">
+                            <tr>
+                                <td>
+                                    <input class = "newColName" type = "text" placeholder = "请输入列名">
+                                </td>
+                                <td>
+                                    <select class = "form-control localType">
+                                        <option selected>string</option>
+                                        <option>decimal</option>
+                                        <option>bigint</option>
+                                        <option>timestamp</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class = "partionIpt" type = "text" placeholder = "请输入对应的值" disabled>
+                                </td>
+                                <td>
+                                    <input class = "partiteBtn" type = "checkbox">
+                                </td>
+                                <td>
+                                    <a class = "localColDel" href="#">删除</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <span class = "newAddColBtn">新增一列</span>
+                </div>
+                <div class="sm modal-footer">
+                    <button type="button" id = "addColBtn" class="btn btn-default tipsBtn" data-dismiss="modal" data-dismiss="modal">确 定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../../lib/jquery.js"></script>
+    <script src="view/jquery.ui.widget.js"></script>
+    <script src="view/jquery.iframe-transport.js"></script>
+    <script src="view/jquery.fileupload.js"></script>
+    <script src = "../view/grid/bootstrap-paginator.js"></script>
+
+    <script src="../ued/js/common.js"></script>
+    <script src="../ued/js/main.js"></script>
+    
+    <script type="text/javascript" src="../store/AbstractStore.js"></script>
+    <script type="text/javascript" src="../store/DatasourceNewStore.js"></script>
+    <script type="text/javascript" src = "view/getJsonJump.js"></script>
+
+    <!-- 试试整合添加的 -->
+    <script type="text/javascript" src = "view/addAndLocal.js"></script>
+    <!-- // <script type="text/javascript" src = "view/addLocalData.js"></script> -->
+    <script type="text/javascript" src = "view/loadFile.js"></script>
+    <!-- dcs -->
+    <!-- // <script type="text/javascript" src = "view/DCSData.js"></script> -->
+    
+    <!-- // <script type="text/javascript" src = "GetJsonController.js"></script> -->
+</body>
+</html>

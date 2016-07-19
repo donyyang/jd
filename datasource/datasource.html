@@ -1,0 +1,398 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>数据源</title>
+
+    <!--UED libs-->
+    <link rel="stylesheet" href="../ued/css/common.css">
+    <link rel="stylesheet" href="../ued/css/main.css"></head>
+<style>
+    .review-data {
+        max-width:400px;
+        overflow:auto;
+    }
+</style>
+<body>
+<div class="pd15" id="datasource">
+
+
+
+    <h3 class="content-h3 pd10-15">
+            <span class="content-h3-mgt"> <i class="iconfont2 text-green">&#xe60c;</i>
+                数据源
+            </span>
+        <a target = "_blank" href="/resources/src/help/index.html?6.html"><i class="gficon37"></i></a><span class = "content-h3-p" style = "padding:0;">数据来源，支持DCS数据源，在DCS中创建数据库/表并加载数据后，在数千工坊中连接后即可使用。
+            </span>
+
+        <div class="form-inline pull-right">
+            <div class="form-group">
+                <select class="form-control" id="dblist"></select>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="search" placeholder="请根据表名进行搜索">
+                        <span class="input-group-btn" id="searchbtn">
+                            <button class="btn btn-default btn-pd" type="button"> <i class="iconfont2"></i>
+                            </button>
+                        </span>
+                </div>
+            </div>
+
+        </div>
+    </h3>
+
+    <div class="panel table-responsive position-relative bg-grey panel-default">
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs nav-gongfang">
+            <li class="active">
+                <a href="#home" data-toggle="tab" data-status="ALL">全  部</a>
+            </li>
+            <li>
+                <a href="#profile" data-toggle="tab" data-status="LINKED">已连接</a>
+            </li>
+            <li>
+                <a href="#messages"  data-toggle="tab" data-status="UNLINK">未连接</a>
+            </li>
+
+        </ul>
+        <div class="tabs-btn">
+            <a href="javascript:;" class="btn btn-success btn-sm" id="zcnewmodel">新建模型</a>
+        </div>
+
+        <!-- Tab panes -->
+        <div class="tab-content" id="tablelist">
+            <div role="tabpanel" class="tab-pane active" id="home">
+
+                <table class="table table-striped mg-none">
+                    <colgroup>
+                        <col width="20%">
+                        <col width="20%">
+                        <col width="30%">
+                    </colgroup>
+                    <thead>
+
+                    <tr class="active">
+                        <th></th>
+                        <th>状态</th>
+                        <th>表名</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableALL">
+                    <!-- <tr>
+                        <td></td>
+                        <td>
+                            <button class="btn btn-default btn-sm">111111</button>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr> -->
+                    </tbody>
+                </table>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="profile">
+                <table class="table table-striped mg-none">
+                    <colgroup>
+                        <col width="20%">
+                        <col width="20%">
+                        <col width="30%">
+                    </colgroup>
+                    <thead>
+                    <tr class="active">
+                        <th></th>
+                        <th>状态</th>
+                        <th>表名</th>
+
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableLINKED"></tbody>
+                </table>
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="messages">
+                <table class="table table-striped mg-none">
+                    <colgroup>
+                        <col width="20%">
+                        <col width="20%">
+                        <col width="30%">
+                    </colgroup>
+                    <thead>
+                    <tr class="active">
+                        <th></th>
+                        <th>状态</th>
+                        <th>表名</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableUNLINK"></tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+
+    <nav class="pull-right">
+        <ul class="pagination pull-right" id="paginator">
+
+        </ul>
+    </nav>
+
+    <!-- <ul id="paginator"></ul> -->
+
+</div>
+
+<div class="pd15 hide" id="createModel">
+
+    <h3 class="content-h3">
+        <i class="iconfont2 text-green">&#xe60c;</i>
+        <span>关联模型</span><a target = "_blank" href="/resources/src/help/index.html?datas.html"><i class="gficon37"></i></a><span class = "content-h3-p" style = "padding:0;">通过高效引擎对模型预计算，提升数据查询速度</span>
+    </h3>
+    <ul class="step-lst">
+        <li class="step-pass2">填写模型信息</li>
+        <li>建立模型关系</li>
+        <li>确认维度计量</li>
+    </ul>
+    <form class="form-horizontal" id="first">
+        <div class="panel pd15">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">事实表：</label>
+                <div class="col-sm-6">
+
+                    <input type="text" class="form-control" disabled  id="maintablename"></div>
+                <div class="form-control-static">
+                    <a href="javascript:;" class="text-blue" data-toggle="tooltip" data-placement="right" title="包含可汇总的数据（事实），可记录描述业务的表">
+                        <i class="iconfont2 fs-18">&#xe63f;</i>
+                    </a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label">模型名称：</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control"  placeholder="字母、数字、下划线组成" id="modelname"></div>
+                <div class="form-control-static">
+                    <a href="javascript:;" class="text-blue" data-toggle="tooltip" data-placement="right" title="保存多表关联关系，形成多维数据模型">
+                        <i class="iconfont2 fs-18">&#xe63f;</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">分区列：</label>
+                <div class="col-sm-6">
+                    <select class="form-control" id="fenqu"></select>
+                    <!-- <span id="helpBlock" class="help-block">我是提示信息</span> -->
+                </div>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label  class="col-sm-2 control-label">日期格式：</label>
+                <div class="col-sm-6">
+
+                    <select  id="dt" class="form-control">
+                        <option value="">请选择日期格式</option>
+                        <option value="yyyy-MM-dd">yyyy-MM-dd</option>
+                        <option value="yyyyMMdd">yyyyMMdd</option>
+                    </select>
+                    <i class="iconfont2 form-control-feedback text-red"></i>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+    <div class="panel table-responsive height500 hidden" id="second">
+
+        <table class="table">
+            <thead>
+            <tr class="active">
+                <th>事实表字段</th>
+                <th>关联方式</th>
+                <th>数据库</th>
+                <th>选择关联维度表名</th>
+                <th>关联字段</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <colgroup>
+                <col width="20%">
+                <col width="12%">
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+                <col width="8%">
+            </colgroup>
+
+            <tr>
+                <td colspan="6" class="text-center">
+                    <a href="javascript:;" class="text-blue" id="addrelation">
+                        <i class="iconfont2">&#xe63e;</i>
+                        新建关联
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="panel clearfix pd15 hidden" id="third">
+
+        <div class="row clearfix">
+            <div class="col-xs-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">维度字段</div>
+                    <ul class="list-group height500" id="weiduziduan">
+
+
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="col-xs-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">指标字段</div>
+                    <ul class="list-group height500" id="zhibiaoziduan">
+
+                    </ul>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row text-right text-muted clearfix">已自动区分维度/指标字段，可选定手动修改。</div>
+    </div>
+
+    <div class="row text-center">
+        <input type="submit" class="btn btn-default" id="cancelcreate" value="取  消">
+        <input type="submit" class="btn btn-default hide" id="pre" value="上一步">
+        <input type="submit" class="btn btn-success" id='next' value="下一步">
+    </div>
+
+</div>
+
+<!-- ***************************************************************************************************************************
+**************************************************数据库表处理页面************************************************************************************************************************************************************************************* -->
+
+<!--
+***************************************************************************************************************************
+**************************************************新建模型处理页面*************************************************************************************************************************************************************************************
+-->
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="modal1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">预览数据</h4>
+            </div>
+            <div class="modal-body review-data">
+                <table class="table" id="data10"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modal2">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+                <p>连接成功</p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--提示框 -->
+<div class="modal fade" id="prompTips">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">提示框</h4>
+            </div>
+            <div class="tipCont modal-body text-center pd60">
+
+            </div>
+            <div class="sm modal-footer" style = "text-align:center">
+                <button type="button" class="btn btn-default tipsBtn" data-dismiss="modal">确 定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="spinner-box hide" id="loading">
+    <div class="spinner">
+        <div class="spinner-container container1">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+        </div>
+        <div class="spinner-container container2">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+        </div>
+        <div class="spinner-container container3">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade in"></div>
+</div>
+
+<!-- Scripts -->
+<!--3rd libs-->
+<script type="text/javascript" src="../../lib/jquery.js"></script>
+
+<script src="../ued/js/common.js"></script>
+
+<script type="text/javascript" src="../view/grid/bootstrap-paginator.js"></script>
+<script type="text/javascript" src="../store/AbstractStore.js"></script>
+
+<script src="jq.extend.js"></script>
+<!-- <script src="createModel.js"></script> -->
+<script src="DatasourceController.js"></script>
+<script src="view/createNewModel.js"></script>
+
+<script type="text/javascript">
+        if(window.opener == null) {
+            var addName = location.href,
+                tableSplit = addName.indexOf('='),
+                tableName = addName.substring(tableSplit+1);
+            
+            var createmodel = new $j.createModel();
+
+        }else {
+           var addName = window.opener.location.search,
+                addSplit = addName.indexOf('&'),
+                tableName = addName.substring(1,addSplit),
+                dbBaseName = addName.substring(addSplit+1);
+
+            var createmodel = new $j.createModel();
+
+            createmodel.createModel(dbBaseName,tableName); 
+        }
+        
+</script>
+</body>
+</html>
