@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <title>数千工坊-创建关联模型－填写模型信息</title>
+    
+     <link rel="stylesheet" href="../ued/css/common.css">
+    <link rel="stylesheet" href="../ued/css/main.css">
+
+     <!--3rd libs-->
+    <script type="text/javascript" src="../../lib/jquery.js"></script>
+    <script src = "../store/AbstractStore.js"></script><!-- Remote data -->
+    <!--<script src = "store/dbModalHandleStroe.js"></script> Local data -->
+    <script src = "../store/DatamodelStore.js"></script><!-- Remote data -->
+    <script src = "../view/grid/bootstrap-paginator.js"></script>
+    <script src = "../ued/js/jquery-ui.min.js"></script>
+
+    <!--UED libs-->
+    <script src="../ued/js/common.js"></script>
+    <script src="../ued/js/main.js"></script>
+    <style>
+        .dbOpen {
+            white-space:nowrap;
+        }
+        .table-link {
+            position:relative;
+            overflow:hidden;
+            min-height:450px;
+        }
+        .dimensions_wrapper {
+            position:absolute;
+            z-index:1050;
+            border:1px solid #d3dbe3;
+            background:#ebf1f5;
+            display:none;
+            width:300px;
+            height:300px;
+            top:0;
+            right:-300px;
+            transition:.2s;
+            overflow:auto;
+        }
+        .showDime {
+            display:block;
+            right:0;
+        }
+        .turnLeft {
+            transform:rotate(-90deg);
+            transition:.1s;
+        }
+        .mleft {
+            text-align: left;
+        }
+        .dimes_table {
+            word-wrap: break-word;
+        }
+        .adjust {
+            box-shadow:0 0 0;
+            border:0;
+        }
+      
+        .mulDataModelWrapper {
+            display:none;
+            min-width: 900px;
+        }
+        .mulDataModelWrapper .dime_left {
+            width:20%;
+            float:left;
+            padding-left:15px;
+        }
+        .mulDataModelWrapper .dime_right {
+            float:left;
+            width:80%;
+        }
+        .factList a,.dimeList a {
+            word-wrap: break-word;
+        }
+        .mask,.eject {
+            display:none;
+        }
+        .spinner-box {
+            z-index:100;
+        }
+
+        #example a {
+            cursor: pointer;
+        }
+        .labelBlock {
+            display:block;
+        }
+
+        .checkColor {
+            /*background:#ccc;*/
+        }
+        .fix_dim_head {
+            position:fixed;
+            width:300px;
+            z-index:10;
+            background:#ebf1f5;
+        }
+    </style>
+    
+</head>
+<body>
+<div class="mask">
+    <div class="spinner-box">
+        <div class="spinner">
+            <div class="spinner-container container1">
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+                <div class="circle3"></div>
+                <div class="circle4"></div>
+            </div>
+            <div class="spinner-container container2">
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+                <div class="circle3"></div>
+                <div class="circle4"></div>
+            </div>
+            <div class="spinner-container container3">
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+                <div class="circle3"></div>
+                <div class="circle4"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade in"></div>
+</div>
+<div class="eject modal-backdrop fade in"></div>
+
+<div class="pd15">
+    <div class = "linkModelWrpaper">
+        <h3 class="content-h3">
+            <i class="iconfont2 text-green">&#xe60c;</i>
+            <span>关联模型</span><a target = "_blank" href="/resources/src/help/index.html?7.html"><i class="gficon37"></i></a><span class = "content-h3-p" style = "padding:0;">确定表与表之前的关联关系，形成多维数据关联模型</span>
+        </h3>
+        <div class="panel table-responsive table-link">
+            <table class="table table-striped">
+                <colgroup>
+                    <col width="15%">
+                    <col width="20%">
+                    <col width="25%">
+                    <col width="25%">
+                </colgroup>
+                <thead>
+                    <tr class="active">
+                        <th>模型名称</th>
+                        <th>最后修改时间</th>
+                        <th>对应事实表</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody class = "dbHandle" id = "dbHandle">
+                
+                </tbody>
+            </table>
+        </div>
+        <div style = "text-align:right;"><ul id="example"></ul></div>
+    </div>
+    <div class="mulDataModelWrapper">
+        <h3 class="content-h3"><i class="iconfont2 text-green">&#xe60c;</i> <span>多维数据集</span><a href="/resources/src/help/index.html?datas.html" target = "_blank"><i class="gficon37"></i></a><span class = "content-h3-p" style = "padding:0;">通过高效引擎对模型预计算，提升数据查询速度</span></h3>
+        <ul class="step-lst">
+            <li class="f_step step-pass2">填写多维数据集信息</li>
+            <li class = "s_step">选择关注的维度字段</li>
+            <li class = "t_step">编辑度量</li>
+        </ul>
+        <div class="form-horizontal">
+            <div class="firstProgress">
+                <div class="panel pd15">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">关联模型名称：</label>
+                        <div class="col-sm-6">
+                             <input class="form-control" id = "linkName" type="text" value = ""disabled>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-sm-2 control-label">多维数据集名称：</label>
+                        <div class="col-sm-6">
+                            <!-- <input type="text" class="form-control"  placeholder=""> -->
+                            <input class="form-control" onkeyup="value=value.replace(/[^\w]/ig,'')" id = "mulDataIpt" type="text">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">描述：</label>
+                        <div class="col-sm-6">
+                            <textarea class="mulDescript form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="secondProgress">
+                <div class="panel clearfix">
+                    <div class="panel-heading2 bg-grey">
+                        <div class="row">
+                            <div class="col-xs-2">数据表</div>
+                            <div class="col-xs-5">物理表字段</div>
+                            <div class="col-xs-5">展示名称</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="dime_left height450">
+                            <div class="panel panel-gongfang bd-none">
+                                <div class="dataModelList list-group">
+                                    <div class="factList"></div>
+                                    <div class="dimeList"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dime_right height450">
+                            <div id="fact" class="panel border-radius panel-default">
+                                <div class="panel-heading bg-grey">
+                                    <div class="checkbox factTableTitle">
+                                        <label class = "labelBlock">
+                                            <input id = "allFactChecked" type="checkbox" value="">
+                                            <span class = "factTableName"></span>
+                                        </label>
+
+                                    </div>
+                                </div>
+                                <ul class="list-group factTable">
+                                </ul>
+                            </div>
+                            <div class="diemsWrapper">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="thirdProgress">
+                <div class="panel table-responsive height500">
+                    <table class="table measureTable">
+                        <thead>
+                        <tr class="active">
+                            <th>名称</th>
+                            <th>类型</th>
+                            <th>统计字段</th>
+                            <th>返回值类型</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr class = "measureList allMeasureList">
+                                <td class = "f_messureName_td allMeasureName new_messureName_1">_count_</td>
+                                <td class = "allMeasureCount f_messureCount_td new_messureCount_1">COUNT</td class = "f_messureFile_td new_messureFile_1">
+                                <td class = "allMeasureFile">1</td>
+                                <td>bigint</td>
+                                <td><a href="#" data-toggle = "modal" data-target = "#count" class="text-blue"><i class="iconfont2">&#xe63d;</i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="newDb text-center">
+                        <a class = "text-blue" id = "newMeasure" href="#" data-toggle = "modal" data-target = "#newMeasureTab"><i class="iconfont2">&#xe63e;</i> 新增度量</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row text-center">
+                <input type="submit" class="btn btn-default cancleBtn" value="取  消">
+                 <input type="submit" class="btn btn-default preBtn" value="上一步">
+                 <input type="submit" class="btn btn-default nextBtn" value="下一步">
+                <input type="submit" class="btn btn-success doneBtn" value="完成">
+            </div>
+
+            <!-- 新增度量框 -->
+            <div class="modal fade" id="newMeasureTab">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">新增度量</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">名称：</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="measureName form-control" placeholder="" value ="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">类型：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="measureType">
+                                            <option value="SUM">SUM</option>
+                                            <option value="MIN" selected>MIN</option>
+                                            <option value="count">MAX</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">统计字段：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control cubeMeasureFiled"  id="measureFiled">
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">返回值类型：</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="measureNumber form-control" value = "" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                            <button type="button" class="btn btn-success measuerBtn"  data-dismiss="modal">确 定</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 第一个度量的模态框 -->
+            <div class="modal fade" id="count" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role = "document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type = "button" class = "close" data-dismiss="modal" aria-label = "Close">
+                                <span aria-hidden = "true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">新增度量</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="">名称：</label>
+                                    <div class="col-sm-8">
+                                        <input class="allMea f_measureName form-control" type="text" value = "_count_">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="">类型：</label>
+                                    <div class="col-sm-8">
+                                        <!-- <select class="form-control" name="" id="f_measureType" disabled>
+                                            <option value="SUM" selected>constant</option>
+                                        </select> -->
+                                        <input id="f_measureType" type="text" class = "form-control" value = "COUNT" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="">统计字段：</label>
+                                    <div class="col-sm-8">
+                                        <!-- <select class="form-control" name="" id="f_measureFiled" disabled>
+                                            <option value="order_num" selected>1</option>
+                                        </select> -->
+                                        <input id="f_measureFiled" type="text" class = "form-control" value = "1" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="">返回类型值：</label>
+                                    <div class="col-sm-8">
+                                        <input class="f_measureNumber form-control" type="text" value = "bigint" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default f_countBtn" data-dismiss="modal">确定</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--提示框 -->
+<div class="modal fade" id="prompTips">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">提示框</h4>
+            </div>
+            <div class="tipCont modal-body text-center pd60">
+                
+            </div>
+            <div class="sm modal-footer" style = "text-align:center">
+                <button type="button" class="btn btn-default tipsBtn" data-dismiss="modal">确 定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 确认删除提示框 -->
+<div class="modal fade" id="confirm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">提示框</h4>
+            </div>
+            <div class="modal-body text-center pd60">  
+                确定要删除么？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                <button type="button" class="btn btn-success confirmBtn" data-dismiss="modal">确 定</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+    <!-- Customer View -->
+    <script src = "DatamodelController.js"></script>
+</body>
+</html>
